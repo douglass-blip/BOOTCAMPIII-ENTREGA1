@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [ "develop", "main", "feature/**" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar (CMake, Debug com sanitizers)
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -g -O0"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Compilar
+        run: cmake --build build -j4
+
+      - name: Executar testes
+        shell: bash
+        run: ./build/tests/run_tests --gtest_color=no | tee test_log.txt
+
+      - name: Anexar log de execucao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log
+          path: test_log.txt
