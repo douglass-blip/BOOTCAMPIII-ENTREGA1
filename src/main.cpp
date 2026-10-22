@@ -3,9 +3,9 @@
 #include <optional>
 #include "url_store.hpp"
 #include "click_tracker.hpp"
-#include "redirect_service.hpp" // Inclusão obrigatória para corrigir o erro de escopo
+#include "redirect_service.hpp" // <- Esta é a linha que o compilador está a pedir
 
-// Mock para a base de dados com os nomes dos parâmetros omitidos para evitar o erro [-Wunused-parameter]
+// Mock para a base de dados
 class MockUrlStore : public UrlStore {
 public:
     bool insert(const std::string&, const UrlRecord&) override { return true; }
@@ -16,11 +16,11 @@ public:
 int main() {
     std::cout << "Iniciando o Servidor do Encurtador de URLs...\n";
 
-    // 1. Inicializar os componentes
+    // Inicializar os componentes
     MockUrlStore store;
     ClickTracker tracker;
     
-    // 2. Integrar com o serviço de redirecionamento
+    // Integrar com o serviço de redirecionamento (Linha 24)
     RedirectService redirect_service(store, tracker);
 
     std::cout << "Servidor a correr e componentes integrados com sucesso!\n";
