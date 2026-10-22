@@ -1,10 +1,22 @@
 #include "click_tracker.hpp"
 
-// STUB: so existe para o harness compilar e os testes falharem (fase vermelha).
-void ClickTracker::record(const std::string&, Clock::time_point) {}
+void ClickTracker::record(const std::string& code, Clock::time_point when) {
+    std::lock_guard<std::mutex> lock(mutex_);
+    clicks_[code].push_back(when);
+}
 
-std::size_t ClickTracker::count(const std::string&) const { return 0; }
+std::size_t ClickTracker::count(const std::string& code) const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = clicks_.find(code);
+    return it == clicks_.end() ? 0 : it->second.size();
+}
 
-std::vector<ClickTracker::Clock::time_point> ClickTracker::history(const std::string&) const {
-    return {};
+std::vector<ClickTracker::Clock::time_point> ClickTracker::history(const std::string& code) const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = clicks_.find(code);
+    if (it == clicks_.end()) {
+        return {};
+    }
+    // Devolve uma COPIA: o chamador nunca enxerga o vetor interno sem o lock.
+    return it->second;
 }
