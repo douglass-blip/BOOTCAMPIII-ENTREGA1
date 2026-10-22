@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.16)
 project(url_shortener CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -13,8 +13,11 @@ add_compile_options(-Wall -Wextra)
 add_library(url_shortener_lib
     src/code_generator.cpp
     src/url_store.cpp
+    src/click_tracker.cpp
 )
+find_package(Threads REQUIRED)
 target_include_directories(url_shortener_lib PUBLIC src)
+target_link_libraries(url_shortener_lib PUBLIC Threads::Threads)
 
 add_executable(url_shortener src/main.cpp)
 target_link_libraries(url_shortener PRIVATE url_shortener_lib)
