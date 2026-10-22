@@ -3,20 +3,20 @@
 #include <optional>
 #include "url_store.hpp"
 #include "click_tracker.hpp"
-#include "redirect_service.hpp"
+#include "redirect_service.hpp" // Inclusão obrigatória para corrigir o erro de escopo
 
-// Criamos uma classe concreta (Mock) para implementar a interface abstrata UrlStore
+// Mock para a base de dados com os nomes dos parâmetros omitidos para evitar o erro [-Wunused-parameter]
 class MockUrlStore : public UrlStore {
 public:
-    bool insert(const std::string& code, const UrlRecord& record) override { return true; }
-    std::optional<UrlRecord> get(const std::string& code) const override { return std::nullopt; }
-    bool exists(const std::string& code) const override { return false; }
+    bool insert(const std::string&, const UrlRecord&) override { return true; }
+    std::optional<UrlRecord> get(const std::string&) const override { return std::nullopt; }
+    bool exists(const std::string&) const override { return false; }
 };
 
 int main() {
     std::cout << "Iniciando o Servidor do Encurtador de URLs...\n";
 
-    // 1. Inicializar os componentes (usando o Mock em vez da interface)
+    // 1. Inicializar os componentes
     MockUrlStore store;
     ClickTracker tracker;
     
