@@ -26,7 +26,7 @@ Antes de redistribuir o projeto, devem ser verificadas as licenças e avisos das
 
 O autor informou que fará a entrega sozinho e que não haverá revisão de outra pessoa. Não houve aprovação de colega nem revisão por pares, e este documento não as sugere. A CI e os testes são controles automatizados, não substitutos para a responsabilidade do autor de entender o código, verificar os resultados e decidir se o comportamento atende à especificação.
 
-O PR de promoção para `main` foi mesclado após autorização específica do autor para usar `--admin`, apesar de a API do GitHub ainda indicar `REVIEW_REQUIRED`. O endpoint de reviews retorna uma lista vazia: não houve aprovação humana ou revisão por pares. O uso de override administrativo é um fato de governança relevante, não um substituto para review. A release v1.0.0 foi publicada sobre o merge commit. A correção documental pós-release está sendo proposta em um PR separado, que não será mesclado com bypass.
+O PR de promoção para `main` foi mesclado após autorização específica do autor para usar `--admin`, apesar de a API do GitHub ainda indicar `REVIEW_REQUIRED`. O endpoint de reviews retorna uma lista vazia: não houve aprovação humana ou revisão por pares. O uso de override administrativo é um fato de governança relevante, não um substituto para review. A release v1.0.0 foi publicada sobre o merge commit. A correção documental pós-release está proposta no PR #29, que não será mesclado com bypass.
 
 ## Declarações pessoais ainda não comprovadas
 

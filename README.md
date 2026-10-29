@@ -12,7 +12,7 @@ Encurtador HTTP em C++17: cria códigos curtos, redireciona para a URL original 
 
 ## Publicação
 
-A release [`v1.0.0`](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/releases/tag/v1.0.0) foi publicada em 29/10/2026 e aponta para o merge commit `d146676c8a6b7d8297b86e13b5e4f6bab1794f15` em `main`, após o merge do PR [#28](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/28). O autor autorizou especificamente o merge com `--admin`; o GitHub não registra reviews (`reviews: []`) e a decisão exibida permanece `REVIEW_REQUIRED`. Isso não equivale a revisão ou aprovação por pares, que não ocorreu. O commit do merge passou build, testes e coverage na CI.
+A release [`v1.0.0`](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/releases/tag/v1.0.0) foi publicada em 29/10/2026 e aponta para o merge commit `d146676c8a6b7d8297b86e13b5e4f6bab1794f15` em `main`, após o merge do PR [#28](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/28). O autor autorizou especificamente o merge com `--admin`; o GitHub não registra reviews (`reviews: []`) e a decisão exibida permanece `REVIEW_REQUIRED`. Isso não equivale a revisão ou aprovação por pares, que não ocorreu. O commit do merge passou build, testes e coverage na CI. A correção dos documentos pós-release está proposta no follow-up [#29](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/29), ainda sujeito à revisão normal; não será usado bypass.
 
 ## Compilar e testar
 
