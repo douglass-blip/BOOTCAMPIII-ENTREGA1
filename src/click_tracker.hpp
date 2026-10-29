@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cstddef>
+#include <filesystem>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -14,6 +15,8 @@ class ClickTracker {
 public:
     using Clock = std::chrono::system_clock;
 
+    explicit ClickTracker(std::filesystem::path persistence_file = {});
+
     // Registra um clique no codigo informado (RF04). O instante pode ser
     // passado explicitamente, o que torna os testes deterministicos.
     void record(const std::string& code, Clock::time_point when = Clock::now());
@@ -25,6 +28,9 @@ public:
     std::vector<Clock::time_point> history(const std::string& code) const;
 
 private:
+    void load();
+
+    std::filesystem::path persistence_file_;
     mutable std::mutex mutex_;
     std::unordered_map<std::string, std::vector<Clock::time_point>> clicks_;
 };

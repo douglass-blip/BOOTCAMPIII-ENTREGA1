@@ -1,6 +1,8 @@
 ﻿#pragma once
 
 #include <chrono>
+#include <filesystem>
+#include <mutex>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -33,7 +35,7 @@ public:
     virtual bool exists(const std::string& code) const = 0;
 };
 
-// Implementacao inicial em memoria.
+// Implementacao em memoria, util para testes.
 class InMemoryUrlStore : public UrlStore {
 public:
     bool insert(const std::string& code, const UrlRecord& record) override;
@@ -41,5 +43,23 @@ public:
     bool exists(const std::string& code) const override;
 
 private:
+    mutable std::mutex mutex_;
+    std::unordered_map<std::string, UrlRecord> records_;
+};
+
+// Armazena registros em JSON Lines e os recarrega ao iniciar o processo.
+class PersistentUrlStore : public UrlStore {
+public:
+    explicit PersistentUrlStore(std::filesystem::path file_path);
+    bool insert(const std::string& code, const UrlRecord& record) override;
+    std::optional<UrlRecord> get(const std::string& code) const override;
+    bool exists(const std::string& code) const override;
+
+private:
+    void load();
+    void append(const std::string& code, const UrlRecord& record) const;
+
+    std::filesystem::path file_path_;
+    mutable std::mutex mutex_;
     std::unordered_map<std::string, UrlRecord> records_;
 };

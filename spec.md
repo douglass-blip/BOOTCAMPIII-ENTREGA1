@@ -22,7 +22,7 @@ O problema é intencionalmente pequeno, mas permite decomposição real em compo
 
 | ID | Descrição |
 |----|-----------|
-| RNF01 | Geração de código curto deve ocorrer em tempo O(1) amortizado |
+| RNF01 | Geração/reserva de código deve ocorrer em tempo O(1) amortizado em relação à quantidade de códigos armazenados |
 | RNF02 | Sistema deve suportar operações concorrentes sem corromper contadores de clique |
 | RNF03 | Código curto deve ter entre 6 e 8 caracteres alfanuméricos |
 | RNF04 | Persistência deve sobreviver a reinício do processo (não pode ser apenas em memória volátil sem opção de dump/reload) |
@@ -66,7 +66,7 @@ O problema é intencionalmente pequeno, mas permite decomposição real em compo
 ## 6. Decomposição em Unidades (Componentes)
 
 1. **CodeGenerator** — gera código curto único (ex: base62 sobre contador ou hash truncado + checagem de colisão). Testável isoladamente sem storage real.
-2. **UrlStore** — interface de persistência (CRUD de URL curta ↔ longa + metadados). Implementação inicial em memória, com interface que permite trocar por um banco depois.
+2. **UrlStore** — interface de persistência (CRUD de URL curta ↔ longa + metadados). Há uma implementação em memória para testes e uma implementação JSON Lines para sobreviver a reinícios.
 3. **ClickTracker** — responsável por registrar e contar cliques de forma thread-safe (contador atômico ou lock).
 4. **RedirectService** — orquestra: valida existência/expiração do código, aciona ClickTracker, retorna URL de destino.
 5. **API Layer** — camada HTTP fina que expõe os 3 endpoints, delega tudo para os serviços acima.
@@ -84,8 +84,13 @@ Cada componente deve ser testável isoladamente (sem subir a API inteira), o que
 
 ## 8. Refinamento por Feedback
 
-*(Seção viva — registrar aqui qualquer ajuste feito na especificação após testes ou revisão do grupo, com data e motivo. Exemplo de formato abaixo.)*
+Esta tabela registra clarificações adotadas na implementação local; não representa revisão ou aprovação de colegas.
 
 | Data | Alteração | Motivo |
 |------|-----------|--------|
-| — | — | — |
+| 2026-10-28 | Expiração é inclusiva: um link não redireciona quando `now >= expires_at`; a consulta de stats continua disponível para links expirados. | Definir resultado determinístico para o caso no instante exato e separar métricas da disponibilidade do redirect. |
+| 2026-10-28 | `expires_at` aceita ISO 8601 com `Z` ou offset `+/-HH:MM`, opcionalmente com até milissegundos; timestamps inválidos recebem HTTP 400. | Validar o contrato temporal sem depender do timezone da máquina. |
+| 2026-10-28 | URLs de entrada devem ser absolutas e usar `http` ou `https`, com host válido; formato vazio/malformado recebe HTTP 400. | Restringir destinos aos esquemas web cobertos pelo redirect. |
+| 2026-10-28 | Registros e eventos de clique são persistidos em arquivos JSON Lines, recarregados na inicialização; linhas corrompidas interrompem o startup com erro. | Atender RNF04 sem perder contagem de analytics; evitar recuperação silenciosa e perda de dados. |
+| 2026-10-28 | RNF01 mede a busca/reserva em relação ao número de registros; o cálculo do hash continua proporcional ao tamanho da URL de entrada. | Tornar explícito o custo inevitável de ler a entrada ao hasheá-la. |
+| 2026-10-28 | Persistência em arquivo suporta um processo por diretório de dados; não oferece coordenação entre processos. | Delimitar a implementação local e evitar prometer concorrência distribuída não testada. |
