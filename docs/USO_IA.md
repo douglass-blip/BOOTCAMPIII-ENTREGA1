@@ -4,7 +4,7 @@
 
 O autor confirmou o uso de **Claude Code** e **GitHub Copilot** no ciclo do projeto. Os registros históricos no README e em `AGENTS.md` atribuem a Claude o apoio à elaboração inicial de `spec.md`, à decomposição de componentes e à implementação. Nesta finalização, o histórico da sessão e os commits publicados registram o uso do GitHub Copilot no apoio à implementação, depuração, testes e documentação.
 
-Esta descrição combina a confirmação do autor com os registros encontrados no repositório e nesta finalização. Ela não pretende atribuir cada linha ou commit exclusivamente a uma ferramenta, nem é uma medição comparativa de desempenho.
+Esta descrição combina a confirmação do autor com os registros encontrados no repositório e nesta finalização. A versão intermediária do relatório mencionava Cursor, mas essa referência não foi mantida: ela conflita com a confirmação posterior do autor de que as ferramentas usadas foram Claude Code e GitHub Copilot. Ela não pretende atribuir cada linha ou commit exclusivamente a uma ferramenta, nem é uma medição comparativa de desempenho.
 
 ## Comparação descritiva, não experimental
 

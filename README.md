@@ -75,7 +75,9 @@ flowchart LR
 
 ## As-built e cobertura
 
-A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%); a execução remota [40871757141](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40871757141) cobriu 501 de 579 linhas (86%). O job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%.
+A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%); a execução remota [40872149947](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40872149947) cobriu 501 de 579 linhas (86%). O job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%.
+
+Relatório final de execução em PDF: [`docs/RELATORIO_FINAL.pdf`](./docs/RELATORIO_FINAL.pdf), com fonte HTML em [`docs/RELATORIO_FINAL.html`](./docs/RELATORIO_FINAL.html). O relatório segue como referência o PDF intermediário fornecido pelo autor; não copia a comparação com Cursor que conflita com a confirmação de uso de Claude Code e GitHub Copilot, e identifica os limites e pendências verificáveis.
 
 Para gerar o relatório localmente com GCC ou Clang e `gcovr` instalado:
 
@@ -116,5 +118,5 @@ Relato fornecido pelo autor sobre o ciclo de desenvolvimento: a principal dificu
 ## Pendências que exigem evidência ou ação do autor
 
 - A comparação documentada em `docs/USO_IA.md` é descritiva; se for exigido um experimento controlado, ainda será necessário realizá-lo e registrar condições e resultados reais.
-- O PDF de submissão depende do template, critérios e dados de identificação exigidos pelo curso.
+- O PDF foi preparado com os dados de identificação e a estrutura do relatório intermediário; se o curso exigir um template ou critérios oficiais diferentes, o autor deve fornecê-los para adequação.
 - Declarações pessoais sobre dados compartilhados, revisão de sugestões e propriedade intelectual devem ser acrescentadas pelo autor apenas se exigidas e com base em sua experiência real.

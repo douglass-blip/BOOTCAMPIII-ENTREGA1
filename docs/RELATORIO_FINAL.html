@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Entrega Final - Encurtador de URLs em C++</title>
+  <style>
+    @page { size: A4; margin: 17mm 18mm 17mm; }
+    * { box-sizing: border-box; }
+    body {
+      color: #1d2733;
+      font: 10pt/1.42 "Segoe UI", Arial, sans-serif;
+      margin: 0;
+    }
+    h1 { color: #123b5d; font-size: 24pt; line-height: 1.12; margin: 0 0 7mm; }
+    h2 {
+      border-bottom: 1px solid #b9c9d6;
+      color: #123b5d;
+      font-size: 15pt;
+      margin: 0 0 4mm;
+      padding-bottom: 2mm;
+    }
+    h3 { color: #20577d; font-size: 11pt; margin: 4mm 0 1.5mm; }
+    p { margin: 0 0 2.5mm; }
+    ul, ol { margin: 1mm 0 3mm; padding-left: 5mm; }
+    li { margin-bottom: 1.2mm; }
+    a { color: #145a86; text-decoration: none; }
+    .cover { padding-top: 20mm; }
+    .eyebrow {
+      color: #4a718d;
+      font-size: 9pt;
+      font-weight: 700;
+      letter-spacing: 1.2pt;
+      text-transform: uppercase;
+    }
+    .subtitle { color: #536575; font-size: 14pt; margin-bottom: 13mm; }
+    .identity, .callout {
+      background: #f0f5f8;
+      border-left: 3px solid #2a719e;
+      margin: 4mm 0;
+      padding: 4mm 5mm;
+    }
+    .identity p { margin: 0 0 1mm; }
+    .identity p:last-child { margin-bottom: 0; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; margin: 5mm 0; }
+    .card { border: 1px solid #d5e0e7; border-radius: 2mm; padding: 3mm; }
+    .card strong { color: #123b5d; display: block; font-size: 13pt; }
+    .card span { color: #536575; font-size: 8.5pt; }
+    .entry { border-bottom: 1px solid #d5e0e7; margin: 2.5mm 0; padding: 0 0 2mm; }
+    .entry strong { color: #123b5d; }
+    .small { color: #536575; font-size: 8.5pt; }
+    .page { break-before: page; page-break-before: always; }
+    .keep { break-inside: avoid; page-break-inside: avoid; }
+    .status { color: #175f3b; font-weight: 700; }
+    .blocked { color: #8c4c0b; font-weight: 700; }
+    .footnote { border-top: 1px solid #d5e0e7; color: #627382; font-size: 8pt; margin-top: 5mm; padding-top: 2mm; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <p class="eyebrow">Projeto de Software · Entrega Final</p>
+    <h1>Encurtador de URLs em C++</h1>
+    <p class="subtitle">Implementação HTTP com persistência e analytics</p>
+
+    <div class="identity">
+      <p><strong>Autor:</strong> Douglas Ramos Jordão</p>
+      <p><strong>RA:</strong> 2245260101</p>
+      <p><strong>Repositório:</strong> <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1">github.com/douglass-blip/BOOTCAMPIII-ENTREGA1</a></p>
+      <p><strong>Execução individual:</strong> sem revisão por pares declarada</p>
+      <p><strong>Data do relatório:</strong> 29 de outubro de 2026</p>
+    </div>
+
+    <h2>1. Resumo da entrega</h2>
+    <p>O projeto implementa um serviço de encurtamento de URLs em C++17. A aplicação expõe endpoints HTTP para criar links, redirecionar e consultar métricas. Os registros e eventos de clique podem ser persistidos em arquivos JSON Lines, e os principais componentes têm testes unitários e de integração.</p>
+
+    <div class="grid">
+      <div class="card"><strong>37/37</strong><span>testes CTest aprovados localmente</span></div>
+      <div class="card"><strong>85% / 86%</strong><span>coverage de linhas local / CI (escopo src/)</span></div>
+      <div class="card"><strong>PR #27</strong><span>integrado em develop</span></div>
+      <div class="card"><strong>PR #28</strong><span>promoção para main aguarda aprovação humana</span></div>
+    </div>
+
+    <h3>Escopo funcional</h3>
+    <ul>
+      <li><code>POST /shorten</code>: cria código curto para URL válida e aceita expiração opcional.</li>
+      <li><code>GET /{short_code}</code>: redireciona com HTTP 302; códigos inexistentes ou expirados retornam 404.</li>
+      <li><code>GET /{short_code}/stats</code>: apresenta destino, cliques e timestamps associados.</li>
+      <li>Geração base62, validação de URL e código, resolução de colisões e persistência local.</li>
+    </ul>
+
+    <div class="callout">
+      <strong>Estado de publicação:</strong> o commit de merge do PR #27 em <code>develop</code> é
+      <code>517f48c2985f53a674e866fca0967d164fa80a56</code>. O PR #28 está aberto; não houve merge em
+      <code>main</code>, tag ou release porque a regra do repositório exige uma aprovação humana.
+    </div>
+  </section>
+
+  <section class="page">
+    <h2>2. Arquitetura e decisões</h2>
+    <p>A API HTTP, implementada com cpp-httplib, delega a lógica de negócio a <code>RedirectService</code>. Esse serviço coordena a geração de códigos, o armazenamento de URLs e o rastreamento de cliques. <code>UrlStore</code> e <code>ClickTracker</code> têm implementações adequadas a testes em memória e persistência JSON Lines para execução local.</p>
+    <div class="entry"><strong>API HTTP.</strong> Rotas, validação dos payloads e respostas HTTP/JSON; testes exercitam criação, redirect, stats e entradas inválidas.</div>
+    <div class="entry"><strong>RedirectService.</strong> Orquestra criação, expiração, destino e contabilização; links expirados não recebem novos cliques.</div>
+    <div class="entry"><strong>CodeGenerator.</strong> Gera códigos base62 e consulta colisões; <code>std::hash</code> não garante códigos estáveis entre toolchains.</div>
+    <div class="entry"><strong>UrlStore / ClickTracker.</strong> Armazenam links e histórico de cliques; arquivos locais são sincronizados dentro de um processo, e compartilhar entre processos não é suportado.</div>
+
+    <h3>ADRs consolidados</h3>
+    <ol>
+      <li><strong>Geração de códigos:</strong> hash truncado com salt de tentativa e resolução de colisão pelo storage; sem promessa de estabilidade entre implementações de <code>std::hash</code>.</li>
+      <li><strong>Persistência:</strong> append-only em JSON Lines para simplicidade e recuperação após reinício; linha inválida causa erro explícito, não descarte silencioso.</li>
+      <li><strong>Dependências:</strong> cpp-httplib, nlohmann/json e GoogleTest obtidos por CMake FetchContent em versões fixadas.</li>
+      <li><strong>Expiração:</strong> link expira quando <code>now &gt;= expires_at</code>; analytics permanece disponível, mas redirect expirado retorna 404 sem incrementar cliques.</li>
+    </ol>
+
+  </section>
+
+  <section class="page">
+    <h2>3. Verificação e resultados</h2>
+    <div class="entry"><strong>Build local — <span class="status">passou</span>.</strong> CMake 4.4.4, MinGW-w64 GCC 16.2.0.</div>
+    <div class="entry"><strong>CTest local — <span class="status">37/37 aprovados</span>.</strong> Suíte inclui API, persistência, concorrência, expiração e datas.</div>
+    <div class="entry"><strong>Execução embaralhada — <span class="status">5 execuções aprovadas</span>.</strong> 37 testes por execução com <code>--gtest_shuffle</code>.</div>
+    <div class="entry"><strong>Coverage local — <span class="status">507/590 linhas (85%)</span>.</strong> GCC instrumentado e gcovr 8.4; limite automatizado de 70%.</div>
+    <div class="entry"><strong>Coverage CI — <span class="status">501/579 linhas (86%)</span>.</strong> Artefato da execução <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40872149947">40872149947</a>.</div>
+    <div class="entry"><strong>CI — <span class="status">build/teste e coverage passaram</span>.</strong> PR #28 no commit <code>92a548a7c7da22ad5ce9fc0357e1ee5435b9b34a</code>; <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40872149947">execução 40872149947</a>.</div>
+    <div class="entry"><strong>Docker Compose — configuração válida.</strong> <code>docker compose --profile test config --quiet</code> passou; containers não iniciados porque o daemon Docker estava indisponível.</div>
+    <p class="small">O workflow atual usa AddressSanitizer e UndefinedBehaviorSanitizer no job de build/teste. Não há evidência de ThreadSanitizer nesta validação do CI. Cobertura e testes medem caminhos exercitados; não provam ausência de defeitos ou atendimento exaustivo a todos os requisitos.</p>
+  </section>
+
+  <section class="page">
+    <h2>4. Histórico, governança e estado GitHub</h2>
+    <div class="entry"><strong>PR #27 — implementação e finalização.</strong> Mesclado em <code>develop</code> em 29/10/2026; merge commit <code>517f48c2985f53a674e866fca0967d164fa80a56</code>.</div>
+    <div class="entry"><strong>PR #28 — promoção develop → main.</strong> Aberto, checks verdes, mas bloqueado por <code>REVIEW_REQUIRED</code>. A regra exige aprovação humana; nenhuma revisão foi fabricada e nenhum bypass foi usado.</div>
+    <div class="entry"><strong>Release.</strong> Nenhuma tag ou release foi publicada; depende da aprovação e do merge normal em <code>main</code>.</div>
+    <p>O autor informou que fará a entrega sozinho. As integrações anteriores via pull requests são histórico do repositório; este relatório não afirma revisão independente de colega nem aprovação humana no PR #28.</p>
+
+    <h2>5. Retrospectiva do autor</h2>
+    <p>Relato fornecido pelo autor sobre o ciclo de desenvolvimento: a dificuldade principal foi manter build e testes consistentes entre máquinas com/sem Docker e entre CMD/PowerShell, além de uma credencial Git de outra pessoa salva no Windows. Entre os problemas mencionados estão um <code>code_generator.cpp</code> antigo copiado por engano (237 bytes em vez de 1537), omissão de <code>url_store.cpp</code> no <code>CMakeLists.txt</code> e push 403 porque outra conta estava autenticada.</p>
+    <p>Segundo o relato, as respostas adotadas durante o ciclo foram tratar GitHub Actions como fonte de verdade para builds limpos no Ubuntu com ASan, UBSan e ThreadSanitizer; criar arquivos por comando e conferir tamanho/conteúdo antes de commits; trabalhar em clones limpos; configurar identidade Git apenas no repositório; e remover a credencial do Windows ao terminar. O aprendizado apontado pelo autor é exigir evidência objetiva (tamanho do arquivo, log do CI ou captura) e versionar a configuração do ambiente, em vez de depender da memória.</p>
+    <p class="small">Esta seção é retrospectiva fornecida pelo autor sobre o ciclo; não afirma que todas as medidas foram executadas nesta sessão. O workflow atual comprovado neste relatório usa ASan e UBSan; ThreadSanitizer não foi alegado como resultado atual.</p>
+  </section>
+
+  <section class="page">
+    <h2>6. Uso de assistentes de IA</h2>
+    <p>O autor confirmou uso de <strong>Claude Code</strong> e <strong>GitHub Copilot</strong>. Os registros históricos atribuem a Claude apoio inicial à especificação, decomposição e implementação. A finalização registrada nesta entrega usou GitHub Copilot para apoiar implementação, depuração, testes e documentação.</p>
+    <p>O relatório intermediário incluía uma comparação com Cursor, mas essa ferramenta não foi mantida nesta descrição: a confirmação posterior do autor identifica Claude Code e Copilot. Os registros permitem apenas uma comparação descritiva de etapas/contexto. Não houve experimento controlado, prompts pareados ou medição de tempo, defeitos ou cobertura por ferramenta; portanto, não há conclusão de superioridade entre elas. A implementação e o CI não permitem atribuir causalmente cada resultado a um assistente.</p>
+
+    <h2>7. Análise ético-técnica</h2>
+    <h3>A. Alucinação e confiabilidade</h3>
+    <p>Assistentes podem sugerir código ou explicações incorretos, inclusive em concorrência, datas e validação. Testes, contratos explícitos, sanitizers ASan/UBSan na CI e coverage são controles observáveis, mas não substituem compreensão e verificação do autor nem comprovam ausência de falhas.</p>
+    <h3>B. Privacidade e dados</h3>
+    <p>URLs e timestamps de cliques podem conter ou revelar dados pessoais. O serviço os persiste localmente em JSON Lines. Recomenda-se usar dados sintéticos em demonstrações, restringir acesso ao diretório e evitar publicar registros. Não há evidência suficiente para afirmar quais dados foram enviados às ferramentas de IA; nenhuma afirmação de ausência de compartilhamento é feita.</p>
+    <h3>C. Propriedade intelectual</h3>
+    <p>Dependências externas são obtidas por FetchContent em versões fixadas. Isso não equivale a uma auditoria de licenças. A redistribuição deve observar os avisos/licenças das versões usadas e as regras do curso para código assistido por IA; este relatório não emite conclusão jurídica nem inventa proveniência de trechos.</p>
+    <h3>D. Responsabilidade e validação humana</h3>
+    <p>O trabalho é individual e não houve revisão por pares. CI e testes são controles automatizados, não aprovação de colega. O autor permanece responsável por compreender os resultados. A regra de aprovação humana no PR #28 é respeitada: enquanto não houver aprovação, não há merge em <code>main</code> nem release.</p>
+
+    <h2>8. Itens ainda dependentes</h2>
+    <ul>
+      <li>Aprovação humana do PR #28 e merge normal para <code>main</code>; a release só poderá ocorrer depois disso.</li>
+      <li>Experimento controlado entre Claude Code e GitHub Copilot, inclusive comparação com/sem <code>AGENTS.md</code>, caso exigido pela rubrica. Não foi inventado resultado.</li>
+      <li>Template e critérios oficiais da Entrega 2 não foram fornecidos; este documento segue a estrutura e os dados de identificação do relatório intermediário fornecido como referência.</li>
+      <li>Declarações pessoais sobre dados enviados, revisão de sugestões e propriedade intelectual devem ser completadas pelo autor se exigidas pelo curso.</li>
+    </ul>
+    <p class="footnote">Relatório preparado com base no estado verificável do repositório e em informações fornecidas pelo autor. O PDF intermediário foi usado como referência estrutural/identificatória; afirmações conflitantes ou não verificadas foram omitidas ou qualificadas.</p>
+  </section>
+</body>
+</html>
