@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ "develop", "main", "feature/**" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar (CMake, Debug com sanitizers)
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Debug
+          -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -g -O0"
+          -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Compilar
+        run: cmake --build build -j4
+
+      - name: Executar testes
+        run: ctest --test-dir build --output-on-failure --output-log test_log.txt
+
+      - name: Anexar log de execucao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log
+          path: test_log.txt
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar gcovr
+        run: python -m pip install gcovr==8.4
+
+      - name: Configurar build instrumentado
+        run: >
+          cmake -S . -B build-coverage
+          -DCMAKE_BUILD_TYPE=Debug
+          -DURL_SHORTENER_ENABLE_COVERAGE=ON
+
+      - name: Compilar e gerar relatorio de coverage
+        run: cmake --build build-coverage --target coverage --parallel 4
+
+      - name: Anexar relatorios de coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            build-coverage/coverage.txt
+            build-coverage/coverage.xml
+            build-coverage/coverage.html

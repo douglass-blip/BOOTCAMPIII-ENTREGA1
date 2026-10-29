@@ -1,0 +1,58 @@
+# Registro de execução
+
+## Ambiente desta sessão
+
+- Sistema: Windows
+- Compilador: MinGW-w64 GCC 16.2.0
+- CMake: 4.4.4
+- Framework: GoogleTest v1.15.2, obtido via CMake FetchContent
+- Dependências HTTP/JSON: cpp-httplib v0.18.3 e nlohmann/json v3.11.3
+- Sanitizers: não usados nesta execução local
+- Coverage: GCC instrumentado com gcovr 8.4; 507 de 590 linhas executáveis em `src/` cobertas (85%). O alvo local e a CI geram relatórios HTML/XML/texto e exigem pelo menos 70%.
+
+## Comandos e resultados
+
+Configuração:
+
+```powershell
+cmake -S . -B build -G "MinGW Makefiles" `
+  -DCMAKE_C_COMPILER="C:/msys64/mingw64/bin/gcc.exe" `
+  -DCMAKE_CXX_COMPILER="C:/msys64/mingw64/bin/g++.exe" `
+  -DCMAKE_MAKE_PROGRAM="C:/msys64/mingw64/bin/mingw32-make.exe"
+```
+
+`cmake --build build --parallel` concluiu com sucesso. `ctest --test-dir build --output-on-failure --output-log build/test-log.txt` executou 37 testes: **37 passaram, 0 falharam**.
+
+Cobertura incluída:
+
+- geração de códigos, tamanho/alfabeto e resolução de colisões;
+- inserção, imutabilidade, persistência/reload e falha explícita para arquivo corrompido;
+- registro concorrente e histórico de cliques;
+- expiração anterior e no instante exato;
+- criação HTTP, redirect `302`, estatísticas, validação de payload e timestamps, códigos inexistentes/ inválidos e URLs expiradas;
+- criação concorrente sem reutilização de código e repetição da mesma URL.
+
+Também foi iniciado o executável real e exercitado via HTTP: `POST /shorten` respondeu `201`, `GET /{code}` respondeu `302`, e `GET /{code}/stats` mostrou um clique. Após encerrar e reiniciar o processo com o mesmo diretório de dados, o registro e a contagem foram recuperados; novo redirect elevou o total para dois.
+
+O executável de testes completo foi repetido cinco vezes com ordem aleatória (`--gtest_shuffle`); cada execução passou os 37 testes. `docker compose config --quiet` validou a configuração. O daemon do Docker não estava ativo, então imagem/containers não foram iniciados.
+
+Nesta revisão, o alvo de coverage compilou a instrumentação, executou os 37 testes via CTest e produziu `coverage.txt`, `coverage.xml` e `coverage.html` em `build-coverage/`. O relatório gcovr 8.4 cobriu 507/590 linhas executáveis em `src/` (85%), acima do limite local/CI de 70%. A cobertura por arquivo foi: `api.cpp` 88%, `click_tracker.cpp` 80%, `code_generator.cpp` 95%, `redirect_service.cpp` 78%, `time_utils.cpp` 95% e `url_store.cpp` 86% (headers instrumentados: 100%); o escopo do relatório inclui também os headers.
+
+Após o merge do PR #27 em `develop`, o build local foi executado novamente e o CTest passou 37/37 testes. `docker compose config --profile test --quiet` validou a configuração do serviço de testes. Não foi possível executar `docker compose up` nem o perfil de testes em container: o daemon Linux do Docker não estava disponível (`dockerDesktopLinuxEngine` ausente).
+
+## Histórico remoto observado
+
+A execução do CI 39786466411 no PR #26, em 22/10/2026, falhou durante a compilação com `RedirectService was not declared in this scope` em `src/main.cpp:24`. O job terminou antes de executar os testes.
+
+O arquivo de log herdado registrava seis testes de `CodeGenerator`, execução randomizada e teste de estresse, mas esses resultados não foram reproduzidos nesta sessão e não são apresentados como validação atual.
+
+## Publicação GitHub
+
+- PR [#27](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/27), base `develop`, branch `douglass-blip-finalizar-bootcampiii`.
+- PR #27 foi mesclado em `develop` em 2026-10-29. Merge commit: `517f48c2985f53a674e866fca0967d164fa80a56`.
+- A CI do PR #27 passou `build-and-test` e `coverage` na execução [40793757408](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793757408), no head `9cc9902d6dcfed8f88222d298e13c91bc2c1ab75`. A execução anterior [40793450790](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793450790), no head `3bc12949e88c896ba0ccf6a9ff0d0398ffdc2f14`, também passou e produziu o relatório remoto de cobertura de 501/579 linhas executáveis (86%) em `src/`.
+- O PR de promoção [#28](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/28), de `develop` para `main`, está aberto. No head `2d1f8b17dcedda868e659ec6de06fe1d6ddcc353`, `build-and-test` e `coverage` passaram na execução [40881885746](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40881885746). O artefato de cobertura verificado no head anterior `a2bea22cf299ff0e81b3ca269a993bf28c2d7a44`, cujo delta até o atual é apenas documental, registrou 501/579 linhas (86%) no run [40875109107](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875109107). O GitHub mantém `REVIEW_REQUIRED`; o autor fará a entrega sozinho e não haverá revisão de outra pessoa. Não houve merge para `main`, tag nem release.
+
+## Relatório final
+
+O relatório [`docs/RELATORIO_FINAL.pdf`](docs/RELATORIO_FINAL.pdf) e sua fonte [`docs/RELATORIO_FINAL.html`](docs/RELATORIO_FINAL.html) foram montados usando a identificação e estrutura dos PDFs fornecidos pelo autor, além dos resultados verificáveis deste repositório. A comparação anterior com Cursor foi excluída por conflitar com a confirmação do autor; nenhuma comparação experimental ou revisão por pares foi inventada. A revisão do novo rascunho também identificou e documentou as alegações incorretas de release v1.0.0, merge em `main`, suíte de quatro testes e TSan no workflow atual. Ver [`docs/CORRECOES_RASCUNHO_FINAL.md`](docs/CORRECOES_RASCUNHO_FINAL.md). A adequação a uma rubrica/template oficial diferente ainda depende de fornecimento pelo curso/autor.
