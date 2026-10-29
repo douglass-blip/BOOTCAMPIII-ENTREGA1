@@ -49,6 +49,7 @@
     .entry strong { color: #123b5d; }
     .small { color: #536575; font-size: 8.5pt; }
     .page { break-before: page; page-break-before: always; }
+    .appendix { break-before: page; page-break-before: always; }
     .keep { break-inside: avoid; page-break-inside: avoid; }
     .status { color: #175f3b; font-weight: 700; }
     .blocked { color: #8c4c0b; font-weight: 700; }
@@ -118,8 +119,8 @@
     <div class="entry"><strong>CTest local — <span class="status">37/37 aprovados</span>.</strong> Suíte inclui API, persistência, concorrência, expiração e datas.</div>
     <div class="entry"><strong>Execução embaralhada — <span class="status">5 execuções aprovadas</span>.</strong> 37 testes por execução com <code>--gtest_shuffle</code>.</div>
     <div class="entry"><strong>Coverage local — <span class="status">507/590 linhas (85%)</span>.</strong> GCC instrumentado e gcovr 8.4; limite automatizado de 70%.</div>
-    <div class="entry"><strong>Coverage CI — <span class="status">501/579 linhas (86%)</span>.</strong> Artefato da execução <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40872149947">40872149947</a>.</div>
-    <div class="entry"><strong>CI — <span class="status">build/teste e coverage passaram</span>.</strong> PR #28 no commit <code>92a548a7c7da22ad5ce9fc0357e1ee5435b9b34a</code>; <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40872149947">execução 40872149947</a>.</div>
+    <div class="entry"><strong>Coverage CI — <span class="status">501/579 linhas (86%)</span>.</strong> Artefato da execução <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40874197297">40874197297</a>.</div>
+    <div class="entry"><strong>CI — <span class="status">build/teste e coverage passaram</span>.</strong> PR #28 no commit <code>20fa48148399f91313fb71b83b9dcadbe68e70c2</code>; <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40874197297">execução 40874197297</a>.</div>
     <div class="entry"><strong>Docker Compose — configuração válida.</strong> <code>docker compose --profile test config --quiet</code> passou; containers não iniciados porque o daemon Docker estava indisponível.</div>
     <p class="small">O workflow atual usa AddressSanitizer e UndefinedBehaviorSanitizer no job de build/teste. Não há evidência de ThreadSanitizer nesta validação do CI. Cobertura e testes medem caminhos exercitados; não provam ausência de defeitos ou atendimento exaustivo a todos os requisitos.</p>
   </section>
@@ -156,9 +157,17 @@
     <ul>
       <li>Aprovação humana do PR #28 e merge normal para <code>main</code>; a release só poderá ocorrer depois disso.</li>
       <li>Experimento controlado entre Claude Code e GitHub Copilot, inclusive comparação com/sem <code>AGENTS.md</code>, caso exigido pela rubrica. Não foi inventado resultado.</li>
-      <li>Template e critérios oficiais da Entrega 2 não foram fornecidos; este documento segue a estrutura e os dados de identificação do relatório intermediário fornecido como referência.</li>
+      <li>A rubrica oficial e o número da entrega não foram confirmados; este documento segue a estrutura e os dados de identificação do PDF intermediário fornecido como referência.</li>
       <li>Declarações pessoais sobre dados enviados, revisão de sugestões e propriedade intelectual devem ser completadas pelo autor se exigidas pelo curso.</li>
     </ul>
+    <h2 class="appendix">9. Correções necessárias no novo rascunho final</h2>
+    <p>O PDF anexado com título “Entrega Final — Release v1.0.0” contém informações que não correspondem ao estado do GitHub e do código verificado nesta data. Corrigir antes de qualquer submissão:</p>
+    <div class="entry"><strong>Release v1.0.0 e main consolidada.</strong> Não existe tag ou release. O PR #28 continua aberto e bloqueado por aprovação humana; <code>main</code> está no commit inicial <code>8e1c0a261d4d3884696d51cc493c740b62b40922</code>. Não declarar versão/release publicada nem implementação consolidada em main.</div>
+    <div class="entry"><strong>Quatro testes / 100%.</strong> Esse log é antigo e não representa a suíte atual. O CTest atual executa 37 testes, todos aprovados; coverage medida: 85% local e 86% no artefato de CI.</div>
+    <div class="entry"><strong>UrlStore apenas em memória.</strong> A aplicação suporta persistência append-only em JSON Lines e reload após reinício; storage em memória é usado nos testes.</div>
+    <div class="entry"><strong>ThreadSanitizer.</strong> O workflow atual comprovado executa ASan e UBSan, não TSan. Qualquer execução histórica de TSan deve ser citada como tal e acompanhada de seu run/log; não apresentá-la como resultado dos checks atuais.</div>
+    <div class="entry"><strong>Revisão por pares e conformidade total.</strong> O autor fará a entrega sozinho e não há revisão de colega. A exigência de aprovação do PR #28 ainda está pendente. A rubrica oficial não foi fornecida, portanto não afirmar conformidade completa com todos os critérios.</div>
+    <div class="entry"><strong>“Entrega 3”.</strong> O documento intermediário se referia à Entrega 2. Confirmar com o curso o número e título corretos; não inferir a etapa acadêmica pelo rascunho.</div>
     <p class="footnote">Relatório preparado com base no estado verificável do repositório e em informações fornecidas pelo autor. O PDF intermediário foi usado como referência estrutural/identificatória; afirmações conflitantes ou não verificadas foram omitidas ou qualificadas.</p>
   </section>
 </body>
