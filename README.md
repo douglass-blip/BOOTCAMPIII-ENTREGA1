@@ -75,7 +75,7 @@ flowchart LR
 
 ## As-built e cobertura
 
-A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%); o job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%. O resultado remoto para a configuração nova ainda depende da execução do CI após o push.
+A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%); a execução remota [40793450790](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793450790) cobriu 501 de 579 linhas (86%). O job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%.
 
 Para gerar o relatório localmente com GCC ou Clang e `gcovr` instalado:
 

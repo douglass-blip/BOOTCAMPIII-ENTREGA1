@@ -49,4 +49,4 @@ O arquivo de log herdado registrava seis testes de `CodeGenerator`, execução r
 - PR [#27](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/27), base `develop`, branch `douglass-blip-finalizar-bootcampiii`.
 - Commit `dc7c5c13d2d6a78024f815f301f2fc122cae293a`.
 - CI original do PR #27: [execução 40791512208](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40791512208), `build-and-test` passou.
-- A execução acima antecede a etapa de cobertura descrita neste README. A execução do CI que inclui a nova etapa de coverage ainda não foi realizada; não se presume seu resultado.
+- CI após a etapa de cobertura: execução [40793450790](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793450790), no commit `3bc12949e88c896ba0ccf6a9ff0d0398ffdc2f14`; `build-and-test` e `coverage` passaram. O artefato remoto reportou 501/579 linhas executáveis (86%) em `src/`; os relatórios estão anexados à execução. Esta validação antecede apenas a atualização documental que registra o resultado.
