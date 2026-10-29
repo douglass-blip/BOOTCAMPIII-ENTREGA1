@@ -77,7 +77,7 @@
       <div class="card"><strong>37/37</strong><span>testes CTest aprovados localmente</span></div>
       <div class="card"><strong>85% / 86%</strong><span>coverage de linhas local / CI (escopo src/)</span></div>
       <div class="card"><strong>PR #27</strong><span>integrado em develop</span></div>
-      <div class="card"><strong>PR #28</strong><span>promoção para main aguarda aprovação humana</span></div>
+      <div class="card"><strong>PR #28</strong><span>aberto; sem revisão externa e bloqueado pela proteção de main</span></div>
     </div>
 
     <h3>Escopo funcional</h3>
@@ -90,8 +90,9 @@
 
     <div class="callout">
       <strong>Estado de publicação:</strong> o commit de merge do PR #27 em <code>develop</code> é
-      <code>517f48c2985f53a674e866fca0967d164fa80a56</code>. O PR #28 está aberto; não houve merge em
-      <code>main</code>, tag ou release porque a regra do repositório exige uma aprovação humana.
+      <code>517f48c2985f53a674e866fca0967d164fa80a56</code>. O PR #28 está aberto. O autor informou que
+      não haverá revisão de outra pessoa, então não haverá aprovação, merge em <code>main</code>, tag ou release;
+      nenhuma proteção será contornada.
     </div>
   </section>
 
@@ -119,8 +120,8 @@
     <div class="entry"><strong>CTest local — <span class="status">37/37 aprovados</span>.</strong> Suíte inclui API, persistência, concorrência, expiração e datas.</div>
     <div class="entry"><strong>Execução embaralhada — <span class="status">5 execuções aprovadas</span>.</strong> 37 testes por execução com <code>--gtest_shuffle</code>.</div>
     <div class="entry"><strong>Coverage local — <span class="status">507/590 linhas (85%)</span>.</strong> GCC instrumentado e gcovr 8.4; limite automatizado de 70%.</div>
-    <div class="entry"><strong>Coverage CI — <span class="status">501/579 linhas (86%)</span>.</strong> Artefato da execução <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875109107">40875109107</a>.</div>
-    <div class="entry"><strong>CI — <span class="status">build/teste e coverage passaram</span>.</strong> PR #28 no commit <code>a2bea22cf299ff0e81b3ca269a993bf28c2d7a44</code>; <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875109107">execução 40875109107</a>.</div>
+    <div class="entry"><strong>Coverage CI — <span class="status">501/579 linhas (86%)</span>.</strong> Artefato verificado no head anterior <code>a2bea22</code>, execução <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875109107">40875109107</a>; o delta até o head atual é apenas documental.</div>
+    <div class="entry"><strong>CI — <span class="status">build/teste e coverage passaram</span>.</strong> PR #28 no head atual <code>b8b136e870c6fa76ed1c699050542f1f9b2dd23c</code>; <a href="https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875606477">execução 40875606477</a>.</div>
     <div class="entry"><strong>Docker Compose — configuração válida.</strong> <code>docker compose --profile test config --quiet</code> passou; containers não iniciados porque o daemon Docker estava indisponível.</div>
     <p class="small">O workflow atual usa AddressSanitizer e UndefinedBehaviorSanitizer no job de build/teste. Não há evidência de ThreadSanitizer nesta validação do CI. Cobertura e testes medem caminhos exercitados; não provam ausência de defeitos ou atendimento exaustivo a todos os requisitos.</p>
   </section>
@@ -130,7 +131,7 @@
     <div class="entry"><strong>PR #27 — implementação e finalização.</strong> Mesclado em <code>develop</code> em 29/10/2026; merge commit <code>517f48c2985f53a674e866fca0967d164fa80a56</code>.</div>
     <div class="entry"><strong>PR #28 — promoção develop → main.</strong> Aberto, checks verdes, mas bloqueado por <code>REVIEW_REQUIRED</code>. A regra exige aprovação humana; nenhuma revisão foi fabricada e nenhum bypass foi usado.</div>
     <div class="entry"><strong>Release.</strong> Nenhuma tag ou release foi publicada; depende da aprovação e do merge normal em <code>main</code>.</div>
-    <p>O autor informou que fará a entrega sozinho. As integrações anteriores via pull requests são histórico do repositório; este relatório não afirma revisão independente de colega nem aprovação humana no PR #28.</p>
+    <p>O autor informou que fará a entrega sozinho e não haverá revisão por outra pessoa. As integrações anteriores via pull requests são histórico do repositório; este relatório não afirma revisão independente de colega nem aprovação humana no PR #28. A proteção de <code>main</code> exige aprovação, por isso o PR fica aberto e sem merge; não haverá bypass.</p>
 
     <h2>5. Retrospectiva do autor</h2>
     <p>Relato fornecido pelo autor sobre o ciclo de desenvolvimento: a dificuldade principal foi manter build e testes consistentes entre máquinas com/sem Docker e entre CMD/PowerShell, além de uma credencial Git de outra pessoa salva no Windows. Entre os problemas mencionados estão um <code>code_generator.cpp</code> antigo copiado por engano (237 bytes em vez de 1537), omissão de <code>url_store.cpp</code> no <code>CMakeLists.txt</code> e push 403 porque outra conta estava autenticada.</p>
@@ -140,7 +141,7 @@
 
   <section class="page">
     <h2>6. Uso de assistentes de IA</h2>
-    <p>O autor confirmou uso de <strong>Claude Code</strong> e <strong>GitHub Copilot</strong>. Os registros históricos atribuem a Claude apoio inicial à especificação, decomposição e implementação. A finalização registrada nesta entrega usou GitHub Copilot para apoiar implementação, depuração, testes e documentação.</p>
+    <p>O autor confirmou uso de <strong>Claude Code</strong> e <strong>GitHub Copilot</strong> ao longo do projeto. Os registros históricos associam Claude ao apoio à especificação, decomposição e implementação inicial; o histórico desta finalização registra Copilot apoiando implementação, depuração, testes e documentação. Essas observações descrevem fases com evidência disponível, sem afirmar uso exclusivo em cada fase.</p>
     <p>O relatório intermediário incluía uma comparação com Cursor, mas essa ferramenta não foi mantida nesta descrição: a confirmação posterior do autor identifica Claude Code e Copilot. Os registros permitem apenas uma comparação descritiva de etapas/contexto. Não houve experimento controlado, prompts pareados ou medição de tempo, defeitos ou cobertura por ferramenta; portanto, não há conclusão de superioridade entre elas. A implementação e o CI não permitem atribuir causalmente cada resultado a um assistente.</p>
 
     <h2>7. Análise ético-técnica</h2>
@@ -151,12 +152,12 @@
     <h3>C. Propriedade intelectual</h3>
     <p>Dependências externas são obtidas por FetchContent em versões fixadas. Isso não equivale a uma auditoria de licenças. A redistribuição deve observar os avisos/licenças das versões usadas e as regras do curso para código assistido por IA; este relatório não emite conclusão jurídica nem inventa proveniência de trechos.</p>
     <h3>D. Responsabilidade e validação humana</h3>
-    <p>O trabalho é individual e não houve revisão por pares. CI e testes são controles automatizados, não aprovação de colega. O autor permanece responsável por compreender os resultados. A regra de aprovação humana no PR #28 é respeitada: enquanto não houver aprovação, não há merge em <code>main</code> nem release.</p>
+    <p>O trabalho é individual e não haverá revisão por outra pessoa. CI e testes são controles automatizados, não aprovação de colega. O autor permanece responsável por compreender os resultados. A proteção de <code>main</code> exige aprovação humana; como essa revisão não será solicitada, o PR #28 fica aberto e não haverá merge nem release. Nenhum bypass será usado.</p>
 
     <h2>8. Itens ainda dependentes</h2>
     <ul>
-      <li>Aprovação humana do PR #28 e merge normal para <code>main</code>; a release só poderá ocorrer depois disso.</li>
-      <li>Experimento controlado entre Claude Code e GitHub Copilot, inclusive comparação com/sem <code>AGENTS.md</code>, caso exigido pela rubrica. Não foi inventado resultado.</li>
+      <li>PR #28 não poderá ser mesclado em <code>main</code> nem gerar release sem aprovação; o autor informou que não haverá revisão de outra pessoa, então esse bloqueio permanecerá.</li>
+      <li>Experimento controlado entre Claude Code e GitHub Copilot na mesma tarefa, inclusive comparação pareada com/sem <code>AGENTS.md</code>, não foi realizado. A issue #19 permanece aberta e a comparação documentada é somente retrospectiva/descritiva.</li>
       <li>A rubrica oficial e o número da entrega não foram confirmados; este documento segue a estrutura e os dados de identificação do PDF intermediário fornecido como referência.</li>
       <li>Declarações pessoais sobre dados enviados, revisão de sugestões e propriedade intelectual devem ser completadas pelo autor se exigidas pelo curso.</li>
     </ul>
