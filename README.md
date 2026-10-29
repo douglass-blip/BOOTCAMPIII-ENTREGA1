@@ -107,7 +107,7 @@ Um link expira quando `now >= expires_at`. Consultas de analytics ainda retornam
 
 ## Fluxo SDD e uso de IA
 
-Os documentos herdados do repositório registram uso de Claude na elaboração inicial da especificação. Nesta finalização, GitHub Copilot apoiou a implementação e validação técnica. Não foi realizado experimento controlado entre ferramentas, nem revisão por pares: o usuário informou que fará a entrega sozinho. Nenhuma aprovação ou opinião de colega é alegada.
+O autor confirmou o uso de Claude Code e GitHub Copilot. O registro descritivo e seus limites estão em [`docs/USO_IA.md`](./docs/USO_IA.md); não houve experimento controlado comparando ferramentas ou uso com/sem `AGENTS.md`. Não houve revisão por pares: o usuário informou que fará a entrega sozinho. Nenhuma aprovação ou opinião de colega é alegada. A análise ético-técnica, sem alegações pessoais não verificadas, está em [`docs/ETICA.md`](./docs/ETICA.md).
 
 ### Retrospectiva do autor
 
@@ -115,7 +115,6 @@ Relato fornecido pelo autor sobre o ciclo de desenvolvimento: a principal dificu
 
 ## Pendências que exigem evidência ou ação do autor
 
-- O experimento comparativo de ferramentas de IA exige executar e documentar a comparação real, inclusive a segunda ferramenta; não é inferido a partir deste trabalho.
-- O relatório ético deve refletir as decisões e práticas pessoais do autor (privacidade, propriedade intelectual, alucinações e revisão humana); este repositório não comprova essas declarações.
+- A comparação documentada em `docs/USO_IA.md` é descritiva; se for exigido um experimento controlado, ainda será necessário realizá-lo e registrar condições e resultados reais.
 - O PDF de submissão depende do template, critérios e dados de identificação exigidos pelo curso.
-- O vídeo de demonstração deve ser gravado pelo autor; o roteiro não substitui sua fala nem constitui gravação.
+- Declarações pessoais sobre dados compartilhados, revisão de sugestões e propriedade intelectual devem ser acrescentadas pelo autor apenas se exigidas e com base em sua experiência real.

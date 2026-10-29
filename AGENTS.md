@@ -4,7 +4,7 @@ Este documento separa o histórico descrito nos arquivos herdados das atividades
 
 ## Registro histórico do repositório
 
-README e versões anteriores deste documento registram uso de Claude (chat) na elaboração inicial de `spec.md`, decomposição de componentes e apoio a implementação. Nesta finalização, GitHub Copilot apoiou a implementação e validação técnica local. Não foi feita comparação experimental entre ferramentas.
+O autor confirmou uso de Claude Code e GitHub Copilot. README e versões anteriores deste documento registram o apoio de Claude à elaboração inicial de `spec.md`, decomposição de componentes e implementação. Nesta finalização, GitHub Copilot apoiou implementação, depuração, testes e documentação técnica. Não foi feita comparação experimental controlada entre ferramentas nem execução pareada com/sem `AGENTS.md`; o registro descritivo está em `docs/USO_IA.md`.
 
 ## Papel do agente no fluxo
 
@@ -17,7 +17,7 @@ README e versões anteriores deste documento registram uso de Claude (chat) na e
 - Toda mudança na especificação original deve ser registrada na seção "Refinamento por Feedback" do `spec.md`, com data e motivo.
 - Código gerado deve respeitar a decomposição em componentes definida na especificação (seção 6 do `spec.md`) — um componente por arquivo/módulo, testável isoladamente.
 - Decisões arquiteturais relevantes tomadas com apoio do agente são registradas como ADRs no `README.md`.
-- Esta finalização foi mantida localmente, sem commit, merge, release ou mudanças remotas no GitHub.
+- O trabalho de finalização foi publicado em branch própria e integrado em `develop` pelo PR #27. O PR #28 para `main` permanece aberto até a aprovação humana exigida pelas regras do repositório; nenhum bypass foi usado e nenhuma release foi criada.
 
 ## Prompt-base utilizado para tarefas de codificação
 

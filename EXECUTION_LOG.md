@@ -38,6 +38,8 @@ O executável de testes completo foi repetido cinco vezes com ordem aleatória (
 
 Nesta revisão, o alvo de coverage compilou a instrumentação, executou os 37 testes via CTest e produziu `coverage.txt`, `coverage.xml` e `coverage.html` em `build-coverage/`. O relatório gcovr 8.4 cobriu 507/590 linhas executáveis em `src/` (85%), acima do limite local/CI de 70%. A cobertura por arquivo foi: `api.cpp` 88%, `click_tracker.cpp` 80%, `code_generator.cpp` 95%, `redirect_service.cpp` 78%, `time_utils.cpp` 95% e `url_store.cpp` 86% (headers instrumentados: 100%); o escopo do relatório inclui também os headers.
 
+Após o merge do PR #27 em `develop`, o build local foi executado novamente e o CTest passou 37/37 testes. `docker compose config --profile test --quiet` validou a configuração do serviço de testes. Não foi possível executar `docker compose up` nem o perfil de testes em container: o daemon Linux do Docker não estava disponível (`dockerDesktopLinuxEngine` ausente).
+
 ## Histórico remoto observado
 
 A execução do CI 39786466411 no PR #26, em 22/10/2026, falhou durante a compilação com `RedirectService was not declared in this scope` em `src/main.cpp:24`. O job terminou antes de executar os testes.
@@ -47,6 +49,6 @@ O arquivo de log herdado registrava seis testes de `CodeGenerator`, execução r
 ## Publicação GitHub
 
 - PR [#27](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/27), base `develop`, branch `douglass-blip-finalizar-bootcampiii`.
-- Commit `dc7c5c13d2d6a78024f815f301f2fc122cae293a`.
-- CI original do PR #27: [execução 40791512208](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40791512208), `build-and-test` passou.
-- CI após a etapa de cobertura: execução [40793450790](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793450790), no commit `3bc12949e88c896ba0ccf6a9ff0d0398ffdc2f14`; `build-and-test` e `coverage` passaram. O artefato remoto reportou 501/579 linhas executáveis (86%) em `src/`; os relatórios estão anexados à execução. Esta validação antecede apenas a atualização documental que registra o resultado.
+- PR #27 foi mesclado em `develop` em 2026-10-29. Merge commit: `517f48c2985f53a674e866fca0967d164fa80a56`.
+- A CI do PR #27 passou `build-and-test` e `coverage` na execução [40793757408](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793757408), no head `9cc9902d6dcfed8f88222d298e13c91bc2c1ab75`. A execução anterior [40793450790](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793450790), no head `3bc12949e88c896ba0ccf6a9ff0d0398ffdc2f14`, também passou e produziu o relatório remoto de cobertura de 501/579 linhas executáveis (86%) em `src/`.
+- O PR de promoção [#28](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/28), de `develop` para `main`, está aberto no head `517f48c2985f53a674e866fca0967d164fa80a56`. A CI [40793979247](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40793979247) passou `build-and-test` e `coverage`; o GitHub mantém `REVIEW_REQUIRED` por exigir aprovação humana. Não houve merge para `main`, tag nem release.
