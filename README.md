@@ -10,6 +10,10 @@ Encurtador HTTP em C++17: cria códigos curtos, redireciona para a URL original 
 - Códigos base62 de sete caracteres por padrão; inserções concorrentes não sobrescrevem códigos.
 - Registros e cliques persistem em arquivos JSON Lines, recarregados na inicialização.
 
+## Publicação
+
+A release [`v1.0.0`](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/releases/tag/v1.0.0) foi publicada em 29/10/2026 e aponta para o merge commit `d146676c8a6b7d8297b86e13b5e4f6bab1794f15` em `main`, após o merge do PR [#28](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/28). O autor autorizou especificamente o merge com `--admin`; o GitHub não registra reviews (`reviews: []`) e a decisão exibida permanece `REVIEW_REQUIRED`. Isso não equivale a revisão ou aprovação por pares, que não ocorreu. O commit do merge passou build, testes e coverage na CI.
+
 ## Compilar e testar
 
 Requisitos: CMake 3.16+, compilador C++17, Git e acesso à Internet na primeira configuração (CMake baixa GoogleTest, cpp-httplib e nlohmann/json via `FetchContent`).
@@ -75,7 +79,7 @@ flowchart LR
 
 ## As-built e cobertura
 
-A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%). O artefato de coverage verificado no run [40875109107](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40875109107) registrou 501 de 579 linhas (86%); o head desse artefato precede as atualizações exclusivamente documentais. No head `2d1f8b17dcedda868e659ec6de06fe1d6ddcc353`, os jobs de build/teste e coverage passaram no run [40881885746](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40881885746). O job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%.
+A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%). No head de release `edefafbbd7b1600c3f8a6561262f676807d3bd96`, os jobs de build/teste e coverage passaram no run [40882260007](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40882260007); o artefato registrou 501 de 579 linhas (86%). O job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%.
 
 Relatório final de execução em PDF: [`docs/RELATORIO_FINAL.pdf`](./docs/RELATORIO_FINAL.pdf), com fonte HTML em [`docs/RELATORIO_FINAL.html`](./docs/RELATORIO_FINAL.html). O relatório segue como referência a estrutura e identificação dos PDFs fornecidos pelo autor; não copia a comparação com Cursor que conflita com a confirmação de uso de Claude Code e GitHub Copilot, e identifica os limites e pendências verificáveis. A errata para o novo rascunho está em [`docs/CORRECOES_RASCUNHO_FINAL.md`](./docs/CORRECOES_RASCUNHO_FINAL.md) e no apêndice do relatório.
 
