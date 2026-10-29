@@ -73,6 +73,20 @@ flowchart LR
 
 `InMemoryUrlStore` e `ClickTracker` sem caminho de persistência são usados em testes. O armazenamento de arquivos é thread-safe dentro de um processo; compartilhar os mesmos arquivos entre processos simultâneos não é suportado.
 
+## As-built e cobertura
+
+A aplicação, APIs, persistência em disco e serviços abaixo estão implementados. O resumo verificável dos testes e do estado do CI fica em [`EXECUTION_LOG.md`](./EXECUTION_LOG.md); ocorrências corrigidas estão em [`docs/ERROS.md`](./docs/ERROS.md). A execução local instrumentada desta revisão cobriu 507 de 590 linhas executáveis em `src/` (85%); o job de CI publica relatórios HTML/XML/texto como artefato `coverage-report` e falha se a cobertura de linhas desse escopo ficar abaixo de 70%. O resultado remoto para a configuração nova ainda depende da execução do CI após o push.
+
+Para gerar o relatório localmente com GCC ou Clang e `gcovr` instalado:
+
+```sh
+cmake -S . -B build-coverage -DCMAKE_BUILD_TYPE=Debug \
+  -DURL_SHORTENER_ENABLE_COVERAGE=ON
+cmake --build build-coverage --target coverage --parallel
+```
+
+Roteiro da demonstração manual de 3–5 minutos: [`docs/DEMO.md`](./docs/DEMO.md). O roteiro é uma lista de ações verificáveis, não um relato pessoal ou uma gravação já produzida.
+
 ## Decisões arquiteturais (ADRs)
 
 ### ADR-001: Hash truncado com resolução de colisão
@@ -95,9 +109,13 @@ Um link expira quando `now >= expires_at`. Consultas de analytics ainda retornam
 
 Os documentos herdados do repositório registram uso de Claude na elaboração inicial da especificação. Nesta finalização, GitHub Copilot apoiou a implementação e validação técnica. Não foi realizado experimento controlado entre ferramentas, nem revisão por pares: o usuário informou que fará a entrega sozinho. Nenhuma aprovação ou opinião de colega é alegada.
 
+### Retrospectiva do autor
+
+Relato fornecido pelo autor sobre o ciclo de desenvolvimento: a principal dificuldade foi manter compilação e testes consistentes entre ambientes com e sem Docker e entre CMD e PowerShell, além de uma credencial Git de outra pessoa salva no Windows. Entre os problemas encontrados, o autor cita a substituição do `code_generator.cpp` novo por uma cópia antiga (237 bytes em vez de 1537), a omissão de `url_store.cpp` no `CMakeLists.txt` e um push `403` causado por outra conta autenticada. Como respostas, relata ter passado a tratar o GitHub Actions como fonte de verdade para builds limpos no Ubuntu com ASan, UBSan e ThreadSanitizer, conferir tamanho e conteúdo dos arquivos antes de commits, trabalhar em clones limpos, configurar a identidade Git apenas no repositório e remover a credencial do Windows ao terminar. O aprendizado registrado pelo autor é exigir evidência objetiva (como tamanho do arquivo, log do CI ou captura de tela) e definir o ambiente em arquivos versionados, não na memória. Este parágrafo registra a retrospectiva informada pelo autor; não afirma que todas essas ações foram executadas nesta sessão.
+
 ## Pendências que exigem evidência ou ação do autor
 
 - O experimento comparativo de ferramentas de IA exige executar e documentar a comparação real, inclusive a segunda ferramenta; não é inferido a partir deste trabalho.
 - O relatório ético deve refletir as decisões e práticas pessoais do autor (privacidade, propriedade intelectual, alucinações e revisão humana); este repositório não comprova essas declarações.
 - O PDF de submissão depende do template, critérios e dados de identificação exigidos pelo curso.
-- Merge para `develop`/`main`, tag, release e qualquer ação remota ficam para o autor; não foram executados nesta sessão.
+- O vídeo de demonstração deve ser gravado pelo autor; o roteiro não substitui sua fala nem constitui gravação.

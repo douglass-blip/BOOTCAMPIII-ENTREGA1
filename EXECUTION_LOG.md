@@ -8,6 +8,7 @@
 - Framework: GoogleTest v1.15.2, obtido via CMake FetchContent
 - Dependências HTTP/JSON: cpp-httplib v0.18.3 e nlohmann/json v3.11.3
 - Sanitizers: não usados nesta execução local
+- Coverage: GCC instrumentado com gcovr 8.4; 507 de 590 linhas executáveis em `src/` cobertas (85%). O alvo local e a CI geram relatórios HTML/XML/texto e exigem pelo menos 70%.
 
 ## Comandos e resultados
 
@@ -35,8 +36,17 @@ Também foi iniciado o executável real e exercitado via HTTP: `POST /shorten` r
 
 O executável de testes completo foi repetido cinco vezes com ordem aleatória (`--gtest_shuffle`); cada execução passou os 37 testes. `docker compose config --quiet` validou a configuração. O daemon do Docker não estava ativo, então imagem/containers não foram iniciados.
 
+Nesta revisão, o alvo de coverage compilou a instrumentação, executou os 37 testes via CTest e produziu `coverage.txt`, `coverage.xml` e `coverage.html` em `build-coverage/`. O relatório gcovr 8.4 cobriu 507/590 linhas executáveis em `src/` (85%), acima do limite local/CI de 70%. A cobertura por arquivo foi: `api.cpp` 88%, `click_tracker.cpp` 80%, `code_generator.cpp` 95%, `redirect_service.cpp` 78%, `time_utils.cpp` 95% e `url_store.cpp` 86% (headers instrumentados: 100%); o escopo do relatório inclui também os headers.
+
 ## Histórico remoto observado
 
-A execução do CI 39786466411 no PR #26, em 22/10/2026, falhou durante a compilação com `RedirectService was not declared in this scope` em `src/main.cpp:24`. O job terminou antes de executar os testes. Não houve execução remota após as mudanças desta sessão, porque nenhuma alteração foi enviada ao GitHub.
+A execução do CI 39786466411 no PR #26, em 22/10/2026, falhou durante a compilação com `RedirectService was not declared in this scope` em `src/main.cpp:24`. O job terminou antes de executar os testes.
 
 O arquivo de log herdado registrava seis testes de `CodeGenerator`, execução randomizada e teste de estresse, mas esses resultados não foram reproduzidos nesta sessão e não são apresentados como validação atual.
+
+## Publicação GitHub
+
+- PR [#27](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/pull/27), base `develop`, branch `douglass-blip-finalizar-bootcampiii`.
+- Commit `dc7c5c13d2d6a78024f815f301f2fc122cae293a`.
+- CI original do PR #27: [execução 40791512208](https://github.com/douglass-blip/BOOTCAMPIII-ENTREGA1/actions/runs/40791512208), `build-and-test` passou.
+- A execução acima antecede a etapa de cobertura descrita neste README. A execução do CI que inclui a nova etapa de coverage ainda não foi realizada; não se presume seu resultado.

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(url_shortener CXX)
 
+option(URL_SHORTENER_ENABLE_COVERAGE "Enable gcovr line coverage reports" OFF)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -59,4 +61,41 @@ target_link_libraries(url_shortener PRIVATE url_shortener_api)
 enable_testing()
 if(EXISTS ${CMAKE_SOURCE_DIR}/tests/CMakeLists.txt)
     add_subdirectory(tests)
+endif()
+
+if(URL_SHORTENER_ENABLE_COVERAGE)
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        message(FATAL_ERROR "Coverage is supported only with GCC or Clang")
+    endif()
+
+    find_program(GCOVR_EXECUTABLE gcovr REQUIRED)
+
+    function(enable_target_coverage target)
+        target_compile_options(${target} PRIVATE --coverage -O0 -g)
+        get_target_property(target_type ${target} TYPE)
+        if(NOT target_type STREQUAL "STATIC_LIBRARY")
+            target_link_options(${target} PRIVATE --coverage)
+        endif()
+    endfunction()
+
+    enable_target_coverage(url_shortener_lib)
+    enable_target_coverage(url_shortener_api)
+    enable_target_coverage(url_shortener)
+    enable_target_coverage(run_tests)
+
+    add_custom_target(coverage
+        COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${PROJECT_BINARY_DIR} --output-on-failure
+        COMMAND ${GCOVR_EXECUTABLE}
+            --root ${PROJECT_SOURCE_DIR}
+            --object-directory ${PROJECT_BINARY_DIR}
+            --filter ${PROJECT_SOURCE_DIR}/src/
+            --txt ${PROJECT_BINARY_DIR}/coverage.txt
+            --xml-pretty
+            --xml ${PROJECT_BINARY_DIR}/coverage.xml
+            --html-details ${PROJECT_BINARY_DIR}/coverage.html
+            --fail-under-line 70
+        DEPENDS run_tests
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        VERBATIM
+    )
 endif()
