@@ -1,0 +1,14 @@
+# Registro de erros e correções
+
+Este relatório registra falhas confirmadas no código/histórico disponível e as correções locais. Não descreve revisões de colegas; o autor informou que fará a entrega sozinho.
+
+| Evidência | Problema confirmado | Correção local |
+|---|---|---|
+| CI do PR #26, execução 39786466411 (22/10/2026): `src/main.cpp:24:5: error: ‘RedirectService’ was not declared in this scope`. | Os arquivos `src/redirect_service.hpp` e `.cpp` no conteúdo daquela branch estavam vazios; o `main` tentava instanciar o serviço. O CMake também não compilava `redirect_service.cpp`. | Implementado `RedirectService`, incluído na biblioteca e substituído o `main` de demonstração por um servidor HTTP executável. |
+| Inspeção da configuração herdada de `tests/CMakeLists.txt`. | `test_click_tracker.cpp` existia mas não fazia parte do executável de testes; portanto os cenários thread-safe não eram executados pela CI. | Adicionados ClickTracker, serviço, persistência e API ao harness; CI agora executa os testes registrados via CTest. |
+| Inspeção dos componentes herdados `UrlStore` e `ClickTracker`. | O armazenamento e a contagem eram apenas em memória; `UrlStore` não protegia acesso concorrente. | Implementadas persistência JSON Lines com reload explícito e sincronização dos acessos dentro do processo; arquivos inválidos falham com mensagem de linha. |
+| README e `EXECUTION_LOG.md` herdados. | O guia de execução ainda era placeholder, e o log descrevia somente seis testes do `CodeGenerator`, sem representar toda a suíte. | Atualizados comandos, arquitetura, limites e resultados reais desta sessão; evidências não reproduzidas foram identificadas como históricas. |
+
+## Validação desta sessão
+
+Build com CMake 4.4.4 e MinGW-w64 GCC 16.2.0 concluído. A suíte registrada pelo CTest executou 37 testes, todos aprovados. Um teste end-to-end adicional confirmou criação, redirect e recuperação dos dados após reiniciar o processo. Esta execução local não usou sanitizers; o estado do CI remoto após estas mudanças ainda depende de um push/PR, que não foi realizado.

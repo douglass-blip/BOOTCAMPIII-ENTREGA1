@@ -1,61 +1,42 @@
-# Relatório de Execução — Test Harness
+# Registro de execução
 
-## Ambiente
+## Ambiente desta sessão
 
-- Compilador: GCC 13.3.0
-- CMake 3.28
-- Framework de testes: GoogleTest v1.15.2 (via CMake FetchContent)
-- Flags de build: `-Wall -Wextra`, com sanitizers `-fsanitize=address,undefined` habilitados na verificação local
+- Sistema: Windows
+- Compilador: MinGW-w64 GCC 16.2.0
+- CMake: 4.4.4
+- Framework: GoogleTest v1.15.2, obtido via CMake FetchContent
+- Dependências HTTP/JSON: cpp-httplib v0.18.3 e nlohmann/json v3.11.3
+- Sanitizers: não usados nesta execução local
 
-## Suíte de testes automatizada (`tests/test_code_generator.cpp`)
+## Comandos e resultados
 
-Cobre os casos de borda definidos na seção 7 do `spec.md` aplicáveis ao componente `CodeGenerator`:
+Configuração:
 
-| Teste | O que valida |
-|---|---|
-| `GeraCodigoComTamanhoEsperado` | Código gerado respeita RNF03 (6-8 caracteres) |
-| `CodigoEhAlfanumerico` | Código contém apenas caracteres alfanuméricos |
-| `MesmaUrlDuasVezesGeraCodigosDistintos` | RN03 — mesma URL gera códigos diferentes em chamadas distintas |
-| `ResolveColisaoTentandoNovamente` | Colisão simulada — gerador tenta novamente até achar código livre |
-| `LancaExcecaoQuandoNuncaConsegueGerarCodigoUnico` | Esgotamento de tentativas lança exceção em vez de loop infinito ou código duplicado |
-| `UrlVaziaAindaGeraCodigoValido` | Caso de borda de entrada vazia não quebra o gerador |
-
-## Log de execução
-
-```
-Running main() from googletest/src/gtest_main.cc
-[==========] Running 6 tests from 1 test suite.
-[----------] Global test environment set-up.
-[----------] 6 tests from CodeGenerator
-[ RUN      ] CodeGenerator.GeraCodigoComTamanhoEsperado
-[       OK ] CodeGenerator.GeraCodigoComTamanhoEsperado (0 ms)
-[ RUN      ] CodeGenerator.CodigoEhAlfanumerico
-[       OK ] CodeGenerator.CodigoEhAlfanumerico (0 ms)
-[ RUN      ] CodeGenerator.MesmaUrlDuasVezesGeraCodigosDistintos
-[       OK ] CodeGenerator.MesmaUrlDuasVezesGeraCodigosDistintos (0 ms)
-[ RUN      ] CodeGenerator.ResolveColisaoTentandoNovamente
-[       OK ] CodeGenerator.ResolveColisaoTentandoNovamente (0 ms)
-[ RUN      ] CodeGenerator.LancaExcecaoQuandoNuncaConsegueGerarCodigoUnico
-[       OK ] CodeGenerator.LancaExcecaoQuandoNuncaConsegueGerarCodigoUnico (0 ms)
-[ RUN      ] CodeGenerator.UrlVaziaAindaGeraCodigoValido
-[       OK ] CodeGenerator.UrlVaziaAindaGeraCodigoValido (0 ms)
-[----------] 6 tests from CodeGenerator (0 ms total)
-
-[----------] Global test environment tear-down
-[==========] 6 tests from 1 test suite ran. (0 ms total)
-[  PASSED  ] 6 tests.
+```powershell
+cmake -S . -B build -G "MinGW Makefiles" `
+  -DCMAKE_C_COMPILER="C:/msys64/mingw64/bin/gcc.exe" `
+  -DCMAKE_CXX_COMPILER="C:/msys64/mingw64/bin/g++.exe" `
+  -DCMAKE_MAKE_PROGRAM="C:/msys64/mingw64/bin/mingw32-make.exe"
 ```
 
-## Verificações adicionais de robustez
+`cmake --build build --parallel` concluiu com sucesso. `ctest --test-dir build --output-on-failure --output-log build/test-log.txt` executou 37 testes: **37 passaram, 0 falharam**.
 
-- Suíte executada 5 vezes com ordem de testes randomizada (`--gtest_shuffle`) — resultado estável em todas as execuções.
-- Teste de estresse dedicado: geração de 100.000 códigos para 100.000 URLs distintas, checando unicidade em tempo real. Resultado: `OK: 100000 codigos gerados, todos unicos.`
-- Todas as execuções acima rodaram com `-fsanitize=address,undefined`, sem nenhuma violação de memória ou comportamento indefinido detectada.
+Cobertura incluída:
 
-## Como reproduzir localmente
+- geração de códigos, tamanho/alfabeto e resolução de colisões;
+- inserção, imutabilidade, persistência/reload e falha explícita para arquivo corrompido;
+- registro concorrente e histórico de cliques;
+- expiração anterior e no instante exato;
+- criação HTTP, redirect `302`, estatísticas, validação de payload e timestamps, códigos inexistentes/ inválidos e URLs expiradas;
+- criação concorrente sem reutilização de código e repetição da mesma URL.
 
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-cmake --build build
-./build/tests/run_tests
-```
+Também foi iniciado o executável real e exercitado via HTTP: `POST /shorten` respondeu `201`, `GET /{code}` respondeu `302`, e `GET /{code}/stats` mostrou um clique. Após encerrar e reiniciar o processo com o mesmo diretório de dados, o registro e a contagem foram recuperados; novo redirect elevou o total para dois.
+
+O executável de testes completo foi repetido cinco vezes com ordem aleatória (`--gtest_shuffle`); cada execução passou os 37 testes. `docker compose config --quiet` validou a configuração. O daemon do Docker não estava ativo, então imagem/containers não foram iniciados.
+
+## Histórico remoto observado
+
+A execução do CI 39786466411 no PR #26, em 22/10/2026, falhou durante a compilação com `RedirectService was not declared in this scope` em `src/main.cpp:24`. O job terminou antes de executar os testes. Não houve execução remota após as mudanças desta sessão, porque nenhuma alteração foi enviada ao GitHub.
+
+O arquivo de log herdado registrava seis testes de `CodeGenerator`, execução randomizada e teste de estresse, mas esses resultados não foram reproduzidos nesta sessão e não são apresentados como validação atual.

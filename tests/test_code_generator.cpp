@@ -96,3 +96,12 @@ TEST(CodeGenerator, UrlVaziaAindaGeraCodigoValido) {
 
     EXPECT_EQ(code.size(), 7u);
 }
+
+TEST(CodeGenerator, RejeitaParametrosForaDoContrato) {
+    const ExistsFn exists = [](const std::string&) { return false; };
+
+    EXPECT_THROW(generateShortCode("https://example.com", exists, 5), std::invalid_argument);
+    EXPECT_THROW(generateShortCode("https://example.com", exists, 9), std::invalid_argument);
+    EXPECT_THROW(generateShortCode("https://example.com", exists, 7, 0), std::invalid_argument);
+    EXPECT_THROW(generateShortCode("https://example.com", ExistsFn{}), std::invalid_argument);
+}

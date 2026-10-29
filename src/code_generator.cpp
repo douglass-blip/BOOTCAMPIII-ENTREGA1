@@ -31,6 +31,16 @@ std::string generateShortCode(
     int length,
     int maxAttempts
 ) {
+    if (length < 6 || length > 8) {
+        throw std::invalid_argument("code length must be between 6 and 8");
+    }
+    if (maxAttempts <= 0) {
+        throw std::invalid_argument("maxAttempts must be positive");
+    }
+    if (!codeExists) {
+        throw std::invalid_argument("codeExists callback must be provided");
+    }
+
     std::hash<std::string> hasher;
 
     for (int attempt = 0; attempt < maxAttempts; ++attempt) {

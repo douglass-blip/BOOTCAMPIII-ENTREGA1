@@ -23,8 +23,7 @@ jobs:
         run: cmake --build build -j4
 
       - name: Executar testes
-        shell: bash
-        run: ./build/tests/run_tests --gtest_color=no | tee test_log.txt
+        run: ctest --test-dir build --output-on-failure --output-log test_log.txt
 
       - name: Anexar log de execucao
         if: always()

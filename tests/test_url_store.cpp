@@ -1,5 +1,9 @@
 ﻿#include <gtest/gtest.h>
 
+#include <atomic>
+#include <thread>
+#include <vector>
+
 #include "url_store.hpp"
 
 using Clock = std::chrono::system_clock;
@@ -82,4 +86,28 @@ TEST(UrlStoreIntegration, ExistsFuncionaComoCallbackDoCodeGenerator) {
     // Gerar de novo pra mesma URL agora deve evitar o codigo ja inserido
     std::string code2 = generateShortCode("https://exemplo.com/integracao", existsFn);
     EXPECT_NE(code, code2);
+}
+
+TEST(UrlStore, ConcurrentDuplicateInsertHasSingleWinner) {
+    InMemoryUrlStore store;
+    const UrlRecord record{
+        "https://example.com/concurrent",
+        Clock::now(),
+        std::nullopt
+    };
+    std::atomic<int> successful_inserts{0};
+    std::vector<std::thread> threads;
+    for (int i = 0; i < 8; ++i) {
+        threads.emplace_back([&] {
+            if (store.insert("same123", record)) {
+                ++successful_inserts;
+            }
+        });
+    }
+    for (auto& thread : threads) {
+        thread.join();
+    }
+
+    EXPECT_EQ(successful_inserts.load(), 1);
+    EXPECT_EQ(store.get("same123")->url, record.url);
 }

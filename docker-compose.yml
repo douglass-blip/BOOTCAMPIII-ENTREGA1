@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    environment:
+      URL_SHORTENER_HOST: 0.0.0.0
+      URL_SHORTENER_PORT: 8080
+      URL_SHORTENER_PUBLIC_BASE_URL: http://localhost:8080
+      URL_SHORTENER_DATA_DIR: /app/data
+    volumes:
+      - url_data:/app/data
+    restart: unless-stopped
+
+  tests:
+    build:
+      context: .
+      target: build
+    command: ["ctest", "--test-dir", "/app/build", "--output-on-failure"]
+    profiles: ["test"]
+
+volumes:
+  url_data:
